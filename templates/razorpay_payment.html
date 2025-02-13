@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complete Payment</title>
+</head>
+<body>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ amount }}",
+            "currency": "{{ currency }}",
+            "name": "HypeBazaar",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response) {
+                // Hidden form submission
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{% url 'handlerequest' %}";
+
+                // Add CSRF token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+                form.appendChild(csrfInput);
+
+                // Add payment details
+                const paymentId = document.createElement('input');
+                paymentId.type = 'hidden';
+                paymentId.name = 'razorpay_payment_id';
+                paymentId.value = response.razorpay_payment_id;
+                form.appendChild(paymentId);
+
+                const orderId = document.createElement('input');
+                orderId.type = 'hidden';
+                orderId.name = 'razorpay_order_id';
+                orderId.value = response.razorpay_order_id;
+                form.appendChild(orderId);
+
+                const signature = document.createElement('input');
+                signature.type = 'hidden';
+                signature.name = 'razorpay_signature';
+                signature.value = response.razorpay_signature;
+                form.appendChild(signature);
+
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Processing Payment</h2>
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ amount }}",
+            "currency": "INR",
+            "name": "HypeBazaar",
+            "description": "Order Payment",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response){
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "/handlerequest/");
+                form.innerHTML = '<input type="hidden" name="razorpay_payment_id" value="' + response.razorpay_payment_id + '">' +
+                                 '<input type="hidden" name="razorpay_order_id" value="' + response.razorpay_order_id + '">' +
+                                 '<input type="hidden" name="razorpay_signature" value="' + response.razorpay_signature + '">';
+                document.body.appendChild(form);
+                form.submit();
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+    </script>
+</body>
+</html> {% endcomment %}
