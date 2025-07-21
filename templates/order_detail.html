@@ -1,0 +1,89 @@
+{% extends 'base.html' %} 
+{% block title %}Order Details{% endblock title %} 
+{% block content %}
+
+<div class="container mt-5 pt-5">
+  <div class="card">
+    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+      <h4>Order #{{ order.order_id }}</h4>
+      <a href="/profile/" class="btn btn-light">Back to Profile</a>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <h5>Order Information</h5>
+          <p><strong>Date:</strong> {{ order.timestamp|date:"F d, Y" }}</p>
+          <p><strong>Status:</strong> 
+            {% if order.paymentstatus == 'COMPLETE' %}
+              <span class="badge bg-success">Completed</span>
+            {% elif order.paymentstatus == 'PENDING' %}
+              <span class="badge bg-warning text-dark">Pending</span>
+            {% else %}
+              <span class="badge bg-secondary">{{ order.paymentstatus }}</span>
+            {% endif %}
+          </p>
+          <p><strong>Total Amount:</strong> ₹{{ order.amount }}</p>
+        </div>
+        <div class="col-md-6">
+          <h5>Shipping Information</h5>
+          <p><strong>Name:</strong> {{ order.name }}</p>
+          <p><strong>Email:</strong> {{ order.email }}</p>
+          <p><strong>Phone:</strong> {{ order.phone }}</p>
+          <p><strong>Address:</strong> {{ order.address1 }}, {{ order.address2 }}</p>
+          <p><strong>City:</strong> {{ order.city }}, {{ order.state }}, {{ order.zip_code }}</p>
+        </div>
+      </div>
+      
+      <h5>Order Items</h5>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>{{ item.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>₹{{ item.price }}</td>
+              <td>₹{{ item.total }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">No items found</td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
+              <td><strong>₹{{ order.amount }}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      {% if updates %}
+      <h5 class="mt-4">Order Updates</h5>
+      <div class="list-group">
+        {% for update in updates %}
+        <div class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1">{{ update.update_desc }}</h6>
+            <small>{{ update.timestamp|date:"F d, Y H:i" }}</small>
+          </div>
+          {% if update.delivered %}
+          <span class="badge bg-success">Delivered</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -359,3 +359,85 @@ def handlerequest(request):
             })
 
     return redirect('/')
+
+
+def profile(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please login to view your profile")
+        return redirect('/authcart/login/')
+    
+    # Get all orders for the current user
+    orders = Orders.objects.filter(email=request.user.email).order_by('-timestamp')
+    
+    context = {
+        'orders': orders
+    }
+    
+    return render(request, "profile.html", context)
+
+
+def view_order(request, order_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, "Please login to view order details")
+        return redirect('/authcart/login/')
+    
+    try:
+        # Get the order
+        order = Orders.objects.get(order_id=order_id)
+        
+        # Verify that the order belongs to the current user
+        if order.email != request.user.email:
+            messages.warning(request, "You don't have permission to view this order")
+            return redirect('/profile/')
+        
+        # Get order updates
+        updates = OrderUpdate.objects.filter(order_id=order_id)
+        
+        # Parse items_json
+        try:
+            items = json.loads(order.items_json)
+            formatted_items = []
+            
+            # Handle different JSON formats
+            if isinstance(items, dict):
+                for item_id, item_data in items.items():
+                    if isinstance(item_data, list):
+                        # Format: {item_id: [qty, name, price]}
+                        formatted_items.append({
+                            'name': item_data[1],
+                            'quantity': item_data[0],
+                            'price': float(item_data[2]),
+                            'total': float(item_data[2]) * int(item_data[0])
+                        })
+                    elif isinstance(item_data, dict):
+                        # Format: {item_id: {name: x, qty: y, price: z}}
+                        formatted_items.append({
+                            'name': item_data.get('name', 'Unknown Item'),
+                            'quantity': item_data.get('qty', 1),
+                            'price': float(item_data.get('price', 0)),
+                            'total': float(item_data.get('price', 0)) * int(item_data.get('qty', 1))
+                        })
+            elif isinstance(items, list):
+                # Handle list format
+                for item in items:
+                    formatted_items.append({
+                        'name': item.get('name', 'Unknown Item'),
+                        'quantity': item.get('qty', 1),
+                        'price': float(item.get('price', 0)),
+                        'total': float(item.get('price', 0)) * int(item.get('qty', 1))
+                    })
+        except Exception as e:
+            formatted_items = []
+            print(f"Error parsing items_json: {e}")
+        
+        context = {
+            'order': order,
+            'updates': updates,
+            'items': formatted_items
+        }
+        
+        return render(request, "order_detail.html", context)
+    
+    except Orders.DoesNotExist:
+        messages.warning(request, "Order not found")
+        return redirect('/profile/')

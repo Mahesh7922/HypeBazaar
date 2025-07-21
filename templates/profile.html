@@ -1,0 +1,73 @@
+{% extends 'base.html' %} 
+{% block title %}My Profile{% endblock title %} 
+{% block content %}
+
+<div class="container mt-5 pt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          <h4>User Details</h4>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ request.user.username }}</h5>
+          <p class="card-text"><strong>Email:</strong> {{ request.user.email }}</p>
+          <p class="card-text"><strong>Joined:</strong> {{ request.user.date_joined|date:"F d, Y" }}</p>
+          <p class="card-text"><strong>Last Login:</strong> {{ request.user.last_login|date:"F d, Y" }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          <h4>Previous Orders</h4>
+        </div>
+        <div class="card-body">
+          {% if orders %}
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order in orders %}
+                  <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.timestamp|date:"F d, Y" }}</td>
+                    <td>₹{{ order.amount }}</td>
+                    <td>
+                      {% if order.paymentstatus == 'COMPLETE' %}
+                        <span class="badge bg-success">Completed</span>
+                      {% elif order.paymentstatus == 'PENDING' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                      {% else %}
+                        <span class="badge bg-secondary">{{ order.paymentstatus }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <a href="/view-order/{{ order.order_id }}" class="btn btn-sm btn-primary">View Details</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-info">
+              You haven't placed any orders yet. <a href="/">Continue shopping</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
