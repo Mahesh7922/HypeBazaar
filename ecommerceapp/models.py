@@ -38,6 +38,8 @@ class Orders(models.Model):
     amountpaid=models.CharField(max_length=500,blank=True,null=True)
     paymentstatus=models.CharField(max_length=20,blank=True)
     phone = models.CharField(max_length=100,default="")
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    
     def __str__(self):
         return self.name
 
@@ -47,7 +49,7 @@ class OrderUpdate(models.Model):
     order_id = models.CharField(max_length=100, default="")
     update_desc = models.CharField(max_length=5000)
     delivered=models.BooleanField(default=False)
-    timestamp = models.DateField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.update_desc[0:7] + "..."

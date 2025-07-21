@@ -133,6 +133,7 @@ from django.contrib import messages
 from math import ceil
 from ecommerceapp import keys
 import razorpay
+import json  # Add this import
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -267,40 +268,6 @@ def checkout(request):
     return render(request, 'checkout.html')
 
 
-# @csrf_exempt
-# def handlerequest(request):
-#     if request.method == "POST":
-#         data = request.POST
-#         try:
-#             razorpay_payment_id = data["razorpay_payment_id"]
-#             razorpay_order_id = data["razorpay_order_id"]
-#             razorpay_signature = data["razorpay_signature"]
-
-#             params_dict = {
-#                 "razorpay_order_id": razorpay_order_id,
-#                 "razorpay_payment_id": razorpay_payment_id,
-#                 "razorpay_signature": razorpay_signature
-#             }
-
-#             # Verify payment
-#             result = razorpay_client.utility.verify_payment_signature(params_dict)
-#             if result:
-#                 order = Orders.objects.get(oid=razorpay_order_id)
-#                 order.paymentstatus = "PAID"
-#                 order.amountpaid = order.amount
-#                 order.save()
-
-#                 update = OrderUpdate(order_id=order.order_id, update_desc="Order has been placed and paid successfully")
-#                 update.save()
-
-#                 return render(request, 'paymentstatus.html', {'response': "Payment Successful!"})
-#             else:
-#                 return render(request, 'paymentstatus.html', {'response': "Payment Verification Failed!"})
-#         except Exception as e:
-#             return render(request, 'paymentstatus.html', {'response': f"Error: {str(e)}"})
-
-#     return redirect("/")
-
 @csrf_exempt
 def handlerequest(request):
     if request.method == "POST":
@@ -322,17 +289,54 @@ def handlerequest(request):
             order.amountpaid = order.amount
             order.save()
 
-            # 4. Create order update record
-            OrderUpdate.objects.create(
-                order_id=order.order_id,
-                update_desc="Payment Successful! Order Placed"
-            )
+            # 4. Parse items_json for invoice
+            try:
+                items = json.loads(order.items_json)
+                formatted_items = []
+                
+                # Handle different possible formats of items_json
+                if isinstance(items, dict):
+                    # Handle dictionary format (key-value pairs)
+                    for item_id, item_data in items.items():
+                        if isinstance(item_data, list) and len(item_data) >= 3:
+                            # Format: {item_id: [qty, name, price]}
+                            formatted_items.append({
+                                'name': item_data[1],
+                                'quantity': item_data[0],
+                                'price': float(item_data[2]),
+                                'total': float(item_data[2]) * int(item_data[0])
+                            })
+                        elif isinstance(item_data, dict):
+                            # Format: {item_id: {name: x, qty: y, price: z}}
+                            formatted_items.append({
+                                'name': item_data.get('name', 'Unknown Item'),
+                                'quantity': item_data.get('qty', 1),
+                                'price': float(item_data.get('price', 0)),
+                                'total': float(item_data.get('price', 0)) * int(item_data.get('qty', 1))
+                            })
+                elif isinstance(items, list):
+                    # Handle list format
+                    for item in items:
+                        if isinstance(item, dict):
+                            formatted_items.append({
+                                'name': item.get('name', 'Unknown Item'),
+                                'quantity': item.get('qty', 1),
+                                'price': float(item.get('price', 0)),
+                                'total': float(item.get('price', 0)) * int(item.get('qty', 1))
+                            })
+            except (json.JSONDecodeError, ValueError, TypeError) as e:
+                # If there's any error parsing the JSON, create a fallback item
+                formatted_items = [{
+                    'name': 'Order Items',
+                    'quantity': 1,
+                    'price': float(order.amount),
+                    'total': float(order.amount)
+                }]
 
-            # 5. Pass ALL required data to template
-            return render(request, 'paymentstatus.html', {
-                'response': 'PAYMENT SUCCESS',
-                'order_id': order.order_id,
-                'amount': order.amount,
+            # 5. Render invoice
+            return render(request, 'invoice.html', {
+                'order': order,
+                'items': formatted_items,
                 'transaction_id': payment_data['razorpay_payment_id']
             })
 

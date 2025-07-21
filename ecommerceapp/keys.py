@@ -1,16 +1,21 @@
-# PAYTM_MERCHANT_ID = 'DIY12386817555501617' PAYTM_SECRET_KEY = 'bKMfNxPPf_QdZppa'
+# Import environment variables
+import os
+from dotenv import load_dotenv
 
-# MID = 'LGRqyj59594840154874'
-# MK = 'AlulEP3fgbQClt4w'
+# Load environment variables from .env file
+load_dotenv()
 
-# PHONEPE_MERCHANT_ID = "PGTESTPAYUAT"
-# PHONEPE_SALT_KEY = "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399"
-# PHONEPE_BASE_URL = "https://sandbox.phonepe.com/apis/merchant-simulator"  # Use production URL for live
+# Paytm settings (commented out but included for reference)
+# PAYTM_MERCHANT_ID = os.environ.get("PAYTM_MERCHANT_ID")
+# PAYTM_SECRET_KEY = os.environ.get("PAYTM_SECRET_KEY")
+# MID = os.environ.get("PAYTM_MID")
+# MK = os.environ.get("PAYTM_MK")
 
+# PhonePe settings (commented out but included for reference)
+# PHONEPE_MERCHANT_ID = os.environ.get("PHONEPE_MERCHANT_ID")
+# PHONEPE_SALT_KEY = os.environ.get("PHONEPE_SALT_KEY")
+# PHONEPE_BASE_URL = os.environ.get("PHONEPE_BASE_URL")  # Use production URL for live
 
-#razorpay:- 
-#MID:- rzp_test_vC1DZ9X1QIanbt
-#secret :- tVhSdfgm5hYc33wvWgu6F8oT
-
-RAZORPAY_KEY_ID = "rzp_test_vC1DZ9X1QIanbt"
-RAZORPAY_KEY_SECRET = "tVhSdfgm5hYc33wvWgu6F8oT"
+# Razorpay settings
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")

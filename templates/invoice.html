@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Invoice - {{ order.order_id }}{% endblock title %}
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <!-- Invoice Header -->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h2>INVOICE</h2>
+                    <strong>Date:</strong> {{ order.timestamp|date:"F d, Y" }}
+                </div>
+                <div class="col-6 text-end">
+                    <h4>Order #{{ order.order_id }}</h4>
+                </div>
+            </div>
+
+            <!-- Billing Information -->
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h5>Billed To:</h5>
+                    <div>{{ order.name }}</div>
+                    <div>{{ order.address1 }}</div>
+                    {% if order.address2 %}<div>{{ order.address2 }}</div>{% endif %}
+                    <div>{{ order.city }}, {{ order.state }} {{ order.zip_code }}</div>
+                    <div>Phone: {{ order.phone }}</div>
+                    <div>Email: {{ order.email }}</div>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="table-responsive mb-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td class="text-end">₹{{ item.price }}</td>
+                            <td class="text-end">₹{{ item.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                            <td class="text-end"><strong>₹{{ order.amount }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Payment Information -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h5>Payment Information:</h5>
+                    <div>Transaction ID: {{ order.oid }}</div>
+                    <div>Payment Status: {{ order.paymentstatus }}</div>
+                    <div>Payment Date: {{ order.timestamp|date:"F d, Y" }}</div>
+                </div>
+            </div>
+
+            <!-- Print Button -->
+            <div class="text-center">
+                <button onclick="window.print()" class="btn btn-primary">Print Invoice</button>
+                <a href="/" class="btn btn-secondary">Return Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
