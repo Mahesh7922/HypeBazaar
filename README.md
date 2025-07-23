@@ -5,7 +5,6 @@
 ### Prerequisites
 
 - Python 3.12+
-- PostgreSQL
 - Virtual environment tool (virtualenv or conda)
 
 ### Local Development Setup
