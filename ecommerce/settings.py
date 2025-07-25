@@ -178,11 +178,6 @@ MESSAGE_TAGS = {
 }
 
 
-# PHONEPE_MERCHANT_ID = "PGTESTPAYUAT"
-# PHONEPE_SALT_KEY = "099eb0cd-02cf-4e2a-8aca-3e6c6aff039"
-# PHONEPE_SALT_INDEX = "1"
-# PHONEPE_REDIRECT_URL = "https://127.0.0.1:8000/payment-success"
-# PHONEPE_CALLBACK_URL = "https://127.0.0.1:8000/payment-callback"
 
 
 
