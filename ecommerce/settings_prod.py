@@ -22,7 +22,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": "/opt/render/project/src/db.sqlite3",  # Use this path on Render
     }
 }
 
