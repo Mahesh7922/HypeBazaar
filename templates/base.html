@@ -5,38 +5,34 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>HypeBazaar 
-    {% block title %} {% endblock title %}
-  </title>
-  <meta name="Ecommerce website, we deliver products in 30 mins" content="">
-  <meta name="HypeBazaar, Ecommerce" content="amazon, flipkart, selling">
+
+  <title>{% block title %}HypeBazaar{% endblock %}</title>
+
+  <meta name="description" content="Ecommerce website, we deliver products in 30 mins">
+  <meta name="keywords" content="HypeBazaar, Ecommerce, amazon, flipkart, selling">
 
   <!-- Favicons -->
-  <link href="{% static '/images/logo3.png' %}" rel="icon">
-  <link href="{% static '/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link href="{% static 'images/logo3.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
-  <!-- Fonts -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{% static '/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static '/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static '/assets/vendor/aos/aos.css' %}" rel="stylesheet">
-  <link href="{% static '/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-  <link href="{% static '/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="{% static '/assets/css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Tempo
-  * Template URL: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+  <!-- FontAwesome (for cart icon) -->
+  <script src="https://kit.fontawesome.com/your_kit_id.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body class="index-page">
@@ -45,8 +41,7 @@
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
       <a href="/" class="logo d-flex align-items-center ">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <img src="{% static '/images/logo3.png' %}" alt="">
+        <img src="{% static 'images/logo3.png' %}" alt="">
         <h1 class="text-danger">HypeBazaar</h1>
       </a>
 
@@ -56,29 +51,25 @@
           <li><a href="/about">About</a></li>
           <li><a href="/checkout">Checkout</a></li>
           <li><a href="/profile">My Profile</a></li>
-          <button type="button" class="nav-link scrollto bg-danger p-3 m-2 text-white" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" ><i class="fa-solid fa-cart-shopping"></i>  Cart (<span id="cart">0</span>)
-          </button>
-          
-          {% if request.user.is_authenticated %}
-            <li><a href="/authcart/logout/">Logout
-            </a></li>
-          {% else %}
-          <li class="dropdown"><a href="#"><span>Sign In</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-          <ul>
-            <li><a href="/authcart/signup/">Sign Up</a></li>
-            <li><a href="/authcart/login/">Login</a></li>
-            
-          </ul>
+          <li>
+            <button type="button" class="nav-link scrollto bg-danger p-3 m-2 text-white" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true">
+              <i class="fa-solid fa-cart-shopping"></i> Cart (<span id="cart">0</span>)
+            </button>
           </li>
+
+          {% if request.user.is_authenticated %}
+            <li><a href="/authcart/logout/">Logout</a></li>
+          {% else %}
+            <li class="dropdown">
+              <a href="#"><span>Sign In</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="/authcart/signup/">Sign Up</a></li>
+                <li><a href="/authcart/login/">Login</a></li>
+              </ul>
+            </li>
           {% endif %}
 
-
-          
-
-
-            
-          
-          <li><a class="bg-dark p-3 m-2" href="/contact">Contact</a></li>
+          <li><a class="bg-dark p-3 m-2 text-white" href="/contact">Contact</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -86,46 +77,37 @@
     </div>
   </header>
 
-  
-
-    <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background">
-
-      <img src="{% static '/images/back-ground.jpg' %}" alt="" data-aos="fade-in">
-
-      <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            {% block content %}
-            
-            {% endblock content %}
-          </div>
+  <!-- Hero Section -->
+  <section id="hero" class="hero section dark-background">
+    <img src="{% static 'images/back-ground.jpg' %}" alt="" data-aos="fade-in">
+    <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          {% block content %}
+          {% endblock content %}
         </div>
       </div>
-
-    </section><!-- /Hero Section -->
+    </div>
+  </section>
 
   <main class="main">
     {% block body %}
-    
     {% endblock body %}
-    
   </main>
 
   <footer id="footer" class="footer dark-background">
-
     <div class="container footer-top">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="/" class="logo d-flex align-items-center">
             <span class="sitename">HypeBazaar</span>
           </a>
           <p>At HypeBazaar, we bring you the latest streetwear and fashion-forward products from top brands and emerging designers. Discover exclusive drops, curated collections, and fast delivery — all in one place.</p>
           <div class="social-links d-flex mt-4">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-linkedin"></i></a>
           </div>
         </div>
 
@@ -143,7 +125,7 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="#">Men's Streetwear </a></li>
+            <li><a href="#">Men's Streetwear</a></li>
             <li><a href="#">Women's Fashion</a></li>
             <li><a href="#">Sneakers</a></li>
             <li><a href="#">Accessories</a></li>
@@ -159,15 +141,12 @@
           <p class="mt-4"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
           <p><strong>Email:</strong> <span>info@example.com</span></p>
         </div>
-
       </div>
     </div>
 
     <div class="container copyright text-center mt-4">
-      <p>© <span>Copyright</span> <strong class="px-1 sitename">Tempo</strong> <span>All Rights Reserved</span></p>
-      
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">HypeBazaar</strong> <span>All Rights Reserved</span></p>
     </div>
-
   </footer>
 
   <!-- Scroll Top -->
@@ -177,16 +156,16 @@
   <div id="preloader"></div>
 
   <!-- Vendor JS Files -->
-  <script src="{% static '/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static '/assets/vendor/php-email-form/validate.js' %}"></script>
-  <script src="{% static '/assets/vendor/aos/aos.js' %}"></script>
-  <script src="{% static '/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
-  <script src="{% static '/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
-  <script src="{% static '/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-  <script src="{% static '/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
 
   <!-- Main JS File -->
-  <script src="{% static '/assets/js/main.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
 
 </body>
 

@@ -8,4 +8,8 @@ psycopg2-binary
 razorpay
 setuptools
 six
+<<<<<<< HEAD
 Pillow
+=======
+Pillow
+>>>>>>> 05ff04eae9958903f822add1cdddd19a4ab012ff
